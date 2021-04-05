@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using GameSystem;
 
-public class GameUIController : MonoBehaviour
+public class GameUIPresenter : MonoBehaviour
 {
     [SerializeField] private Canvas TitleCanvas;
     [SerializeField] private Canvas CreateCanvas;
@@ -15,13 +15,12 @@ public class GameUIController : MonoBehaviour
 
     private GameManager GameManegy;
     private GamePlayUIController PlayUI;
-    private StageCreateUIController controllCreateUI;
 
     private void Awake()
     {
         GameManegy = GameObject.Find("Game Manager").GetComponent<GameManager>();
         PlayUI = GamePlayCanvas.gameObject.GetComponent<GamePlayUIController>();
-        controllCreateUI = GamePlayCanvas.gameObject.GetComponent<StageCreateUIController>();
+        GameInfoCanvas.gameObject.SetActive(false);
     }
 
     public void UpdateDestroyCardCount(int count)
@@ -35,6 +34,34 @@ public class GameUIController : MonoBehaviour
         PlayUI.UpatateTotalCardCount(total);
     }
 
+    /// <summary>
+    /// ステージ設定UIページからのイベントを取得する
+    /// </summary>
+    /// <param name="uievent"></param>
+    /// <param name="totalcard">全カード設定データ　（Createdeのみ）</param>
+    /// <param name="pattern">全パターン数設定データ　（Createdeのみ）</param>
+    public void EventCreateStage(UIEvent uievent, int totalcard = -1, int pattern = -1)
+    {
+        switch(uievent)
+        {
+            case UIEvent.Create:
+                CreateCardPile(totalcard, pattern);
+                break;
+            case UIEvent.Shuffle:
+                GameManegy.ShuffleCardPile();
+                break;
+            case UIEvent.Placement:
+                GameManegy.PlacementCardPile();
+                break;
+        }
+    }
+
+    /// <summary>
+    /// カードを生成をゲームマネージャーに依頼する
+    /// 引数をいれない場合既存条件を使用
+    /// </summary>
+    /// <param name="totalcard">カードの総数</param>
+    /// <param name="pattern">カードのパターン数</param>
     public void CreateCardPile( int totalcard = -1, int pattern = -1)
     {
         if( totalcard > 1 && pattern > 1 )
@@ -47,43 +74,91 @@ public class GameUIController : MonoBehaviour
         }
     }
 
-    public void ShuffleCardPile()
+    /// <summary>
+    /// タイトル画面からのイベントを取得する
+    /// </summary>
+    /// <param name="uievent"></param>
+    public void EventTitleUI(UIEvent uievent)
     {
-        GameManegy.ShuffleCardPile();
+        switch (uievent)
+        {
+            case UIEvent.Start:
+                StartGame();
+                break;
+            case UIEvent.Info:
+                OpenGameInfo();
+                break;
+            case UIEvent.Quit:
+                QuitGame();
+                break;
+        }
     }
 
-    public void PlacementCard()
+    /// <summary>
+    /// ゲーム終了画面からのイベントを取得する
+    /// </summary>
+    /// <param name="uievent"></param>
+    public void EventEndUI(UIEvent uievent)
     {
-
-        GameManegy.PlacementCardPile();
+        switch (uievent)
+        {
+            case UIEvent.Title:
+                ReturnTitlePage();
+                break;
+            case UIEvent.Retry:
+                RetryGame();
+                break;
+        }
     }
 
-    public void ReturnTitlePage()
+    /// <summary>
+    /// メニュー画面からのイベントを取得する
+    /// </summary>
+    /// <param name="uievent"></param>
+    public void EventPauseUI(UIEvent uievent)
+    {
+        switch (uievent)
+        {
+            case UIEvent.Title:
+                ReturnTitlePage();
+                break;
+            case UIEvent.Quit:
+                QuitGame();
+                break;
+            case UIEvent.Retry:
+                RetryGame();
+                break;
+            case UIEvent.Return:
+                PlayScreen();
+                break;
+        }
+    }
+
+
+    private void ReturnTitlePage()
     {
         GameManegy.RestoreGame();
     }
 
-    public void RetryGame()
+    private void RetryGame()
     {
         GameManegy.RetryGame(); 
     }
 
-    public void StartGame()
+    private void StartGame()
     {
         GameManegy.StartGame();
     }
 
-    public void QuitGame()
+    private void QuitGame()
     {
         GameManegy.QuitGame();
     }
 
     public void PauseGame()
     {
-        //GameManegy.QuitGame();
         if (GameManegy.CheckPauseStatus())
         {
-            Debug.Log("Pause Menu Call");
             ChangeUIScreen(GameStatus.GamePause);
         }
         else
@@ -106,11 +181,22 @@ public class GameUIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 情報表示画面表示
+    /// 情報表示画面は表示キャンバス切り替えではなく現在の画面を上に表示を出す
+    /// </summary>
     public void OpenGameInfo()
     {
-        GameInfoCanvas.gameObject.SetActive(true);
+        if (!GameInfoCanvas.gameObject.activeSelf)
+        {
+            GameInfoCanvas.gameObject.SetActive(true);
+        }
     }
 
+    /// <summary>
+    /// ステータスに合わせて画面のh表示/非表示切り替え
+    /// </summary>
+    /// <param name="screen">出力するステータス</param>
     public void ChangeUIScreen(GameStatus screen)
     {
         switch (screen)

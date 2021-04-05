@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject CardPrefabData;
     [SerializeField] private GameObject CardFiled;
     private CardPlacementController CardPlacement;
-    private GameUIController UIControll;
+    private GameUIPresenter UIControll;
     private List<GameObject> PlayCardList = new List<GameObject>();
 
     [HeaderAttribute("Game Status")]
@@ -43,10 +43,9 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
 
             CardPlacement = new CardPlacementController();
-            CardPlacement.SetPrefab = CardPrefabData;
-            CardPlacement.SetFiled = CardFiled;
+            CardPlacement.SetCardPrefab = CardPrefabData;
 
-            UIControll = GameObject.Find("Game UI Canvas").GetComponent<GameUIController>();
+            UIControll = GameObject.Find("Game UI Canvas").GetComponent<GameUIPresenter>();
         }
         else
         {

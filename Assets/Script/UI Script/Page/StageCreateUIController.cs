@@ -5,11 +5,13 @@ using UnityEngine.UI;
 
 using DG.Tweening;
 
+using GameSystem;
+
 public class StageCreateUIController : MonoBehaviour
 {
     [SerializeField] private Dropdown totalCardNumList;
     [SerializeField] private Dropdown patternCountList;
-    private GameUIController UIControll;
+    private GameUIPresenter UIControll;
 
     [SerializeField] private Button CreateButton;
     [SerializeField] private Button ShuffleButton;
@@ -18,18 +20,9 @@ public class StageCreateUIController : MonoBehaviour
     private int selectTotalCardNumber;
     private int selectKindCardPattern;
 
-    enum CreateStatus
-    {
-        Idle,
-        CardCreate,
-        CardShuffle,
-    }
-
-    [Disable] [SerializeField] private CreateStatus nowState = CreateStatus.Idle;
-
     private void Awake()
     {
-        UIControll = GameObject.Find("Game UI Canvas").GetComponent<GameUIController>();
+        UIControll = GameObject.Find("Game UI Canvas").GetComponent<GameUIPresenter>();
         selectTotalCardNumber = 0;
         selectKindCardPattern = 0;
     }
@@ -89,48 +82,29 @@ public class StageCreateUIController : MonoBehaviour
 
     public void OnClickCardCreate()
     {
-        if (nowState != CreateStatus.Idle )
-        {
-            return;
-        }
-            
-        UIControll.CreateCardPile( selectTotalCardNumber, selectKindCardPattern);
-        nowState = CreateStatus.CardCreate;
-
         totalCardNumList.interactable = false;
         patternCountList.interactable = false;
         CreateButton.interactable = false;
         ShuffleButton.interactable = true;
+
+        UIControll.EventCreateStage(UIEvent.Create, selectTotalCardNumber, selectKindCardPattern);
     }
 
     public void OnClickCardShuffle()
     {
-        if (nowState != CreateStatus.CardCreate)
-        {
-            return;
-        }
-
-        UIControll.ShuffleCardPile();
-        nowState = CreateStatus.CardShuffle;
-
         ShuffleButton.interactable = false;
         PlacementButton.interactable = true;
+
+        UIControll.EventCreateStage(UIEvent.Shuffle);
     }
 
-    public void OnClickCardPlacement()
+    public void OnClickCardPlacement()  
     {
-        //カード山をシャッフルした以降のみ開始可能
-        if (nowState != CreateStatus.CardShuffle)
-        {
-            return;
-        }
-
-        UIControll.PlacementCard();
-        nowState = CreateStatus.Idle;
-
 
         ResetButtonStatus();
         RefreshData();
         gameObject.GetComponent<Canvas>().enabled = false;
+
+        UIControll.EventCreateStage(UIEvent.Placement);
     }
 }

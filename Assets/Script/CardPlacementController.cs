@@ -7,7 +7,6 @@ using DG.Tweening;
 public class CardPlacementController
 {
     private GameObject CardPrefabData;
-    private GameObject CardFiled;
     private int horizontalMaxCount = 6;
     private int verticalMaxCount = 3;
 
@@ -32,7 +31,10 @@ public class CardPlacementController
         GameManegy = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
-    public GameObject SetPrefab
+    /// <summary>
+    ///　使用するカードのPrefabを設定する
+    /// </summary>
+    public GameObject SetCardPrefab
     {
         set
         {
@@ -40,13 +42,6 @@ public class CardPlacementController
         }
     }
 
-    public GameObject SetFiled
-    {
-        set
-        {
-            CardFiled = value;
-        }
-    }
 
     /// <summary>
     /// ゲームで使用するカード山を作る
@@ -54,7 +49,7 @@ public class CardPlacementController
     /// <param name="cardlist">生成したカード情報を受け取るリスト</param>
     /// <param name="num">カードの総数</param>
     /// <param name="kind">パターンの総数</param>
-    /// <returns></returns>
+    /// <returns>処理成功有無</returns>
     public bool CreatCardPile(ref List<GameObject> cardlist, int num, int kind)
     {
         if (!CardOptionCheck(num, kind))
@@ -77,12 +72,13 @@ public class CardPlacementController
                                 Quaternion.identity));
 
             cardlist[cardidx].GetComponent<CardItemController>().InitCardData(cardidx, pattern);
+
             cardset++;
-            if(cardset == 2)
+            if (cardset == 2)
             {
                 cardset = 0;
                 pattern++;
-                if(pattern >= kindPattern)
+                if (pattern >= kindPattern)
                 {
                     pattern = 0;
                 }
@@ -118,7 +114,7 @@ public class CardPlacementController
         Vector3 pos = cardlist[0].gameObject.transform.position;
         Vector3 offset = new Vector3(0, 0, 0.5f);
 
-
+        //シャッフルアニメーション
         CardShuffleUpTween.Kill();
         CardShuffleUpTween = cardlist[0].gameObject.transform.DOMove((pos + offset), shuffleTweenSpeed);
         CardShuffleUpTween.SetEase(Ease.Linear);
@@ -139,13 +135,13 @@ public class CardPlacementController
     /// カード山のカードをプレイマットに配置する
     /// </summary>
     /// <param name="cardlist">カード山リスト</param>
-    /// <returns>成功有無</returns>
+    /// <returns>処理成功有無</returns>
     public bool PlacementCrad( ref List<GameObject> cardlist)
     {
         int createline = 0;
-        float createstartypoint = 0; 
-        float xpointstart = (horizontalCardInterval / 2) - (cardNum / 2.0f * horizontalCardInterval);
-        int endlinecount = 0;
+        float createstartypoint = 0;
+        float xpointstart = 0;
+        int endlinecount = 0;   
 
         //Y座標の開始位置を取得
         switch ((cardNum-1) / horizontalMaxCount)
@@ -174,6 +170,7 @@ public class CardPlacementController
         KillTweentToID(placementTweenID);
         Sequence SequenceCardTween = DOTween.Sequence();
         SequenceCardTween.SetId(placementTweenID);
+
         float linecount;
         for ( int cardidx=0; cardidx<cardNum ; cardidx++)
         {
@@ -187,6 +184,7 @@ public class CardPlacementController
             SequenceCardTween.Append(cardlist[cardidx].transform.DOMove(pos, 0.15f))
                     .AppendInterval(0.1f);
                     
+
         }
         SequenceCardTween.OnComplete(() => GameManegy.CompleteCardPlacement());
         return true;

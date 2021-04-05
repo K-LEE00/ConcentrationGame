@@ -27,10 +27,8 @@ public class PlayerController : MonoBehaviour
                 //カード操作イベントなし
                 break;
             case GameStatus.FirstPhase:
-                SelectCardFirstStep();
-                break;
             case GameStatus.SecondPhase:
-                SelectCardSecondStep();
+                CheckRayObject();
                 break;
             case GameStatus.DecisionPhase:
                 //カード操作イベントなし
@@ -43,7 +41,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void SelectCardFirstStep()
+    /// <summary>
+    /// 選択操作によるカードを認識
+    /// </summary>
+    private void CheckRayObject()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -52,21 +53,7 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                DecisionSelectCard(hit.collider.gameObject);
-            }
-        }
-    }
-
-    private void SelectCardSecondStep()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                DecisionSelectCard(hit.collider.gameObject);
+                DecisionCard(hit.collider.gameObject);
             }
         }
     }
@@ -75,7 +62,7 @@ public class PlayerController : MonoBehaviour
     /// 選択したカードを確認する
     /// </summary>
     /// <param name="selectcard">選択カードのGameObject</param>
-    private void DecisionSelectCard(GameObject selectcard )
+    private void DecisionCard(GameObject selectcard )
     {
         if (selectcard.tag == "Card")
         {

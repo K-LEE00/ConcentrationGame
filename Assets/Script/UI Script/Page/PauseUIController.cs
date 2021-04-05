@@ -2,33 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameSystem;
+
 public class PauseUIController : MonoBehaviour
 {
-    private GameUIController UIControll;
+    private GameUIPresenter UIControll;
 
     private void Awake()
     {
-        UIControll = GameObject.Find("Game UI Canvas").GetComponent<GameUIController>();
+        UIControll = GameObject.Find("Game UI Canvas").GetComponent<GameUIPresenter>();
     }
 
     public void OnClickReturnTitle()
     {
-        UIControll.ReturnTitlePage();
+        UIControll.EventPauseUI(UIEvent.Title);
     }
 
     public void OnClickQuitGame()
     {
-        UIControll.QuitGame();
+        UIControll.EventPauseUI(UIEvent.Quit);
     }
 
     public void OnClickRetryGame()
     {
-        UIControll.RetryGame();
         gameObject.GetComponent<Canvas>().enabled = false;
+        UIControll.EventPauseUI(UIEvent.Retry);
     }
 
     public void OnClickReturnGame()
     {
-        UIControll.PlayScreen();
+        UIControll.EventPauseUI(UIEvent.Return);
     }
 }

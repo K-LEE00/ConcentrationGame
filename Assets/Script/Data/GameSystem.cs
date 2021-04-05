@@ -30,4 +30,17 @@ namespace GameSystem{
         End,
         All,
     }
+
+    public enum UIEvent
+    {
+        Create,
+        Shuffle,
+        Placement,
+        Start,
+        Info,
+        Quit,
+        Title,
+        Retry,
+        Return,
+    }
 }

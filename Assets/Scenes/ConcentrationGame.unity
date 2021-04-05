@@ -179,10 +179,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 0
+    m_FontSize: 30
+    m_FontStyle: 1
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 0
     m_AlignByGeometry: 0
@@ -190,7 +190,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: "\u30BD\u30FC\u30B9\u30B3\u30FC\u30C9\nhttps://github.com/K-LEE00/ConcentrationGame\n\n\u5FC5\u9808Asset(DOTween)\nhttps://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676\n"
 --- !u!222 &10049733
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3238,7 +3238,6 @@ MonoBehaviour:
   CreateButton: {fileID: 686963492}
   ShuffleButton: {fileID: 53504648}
   PlacementButton: {fileID: 2100976907}
-  nowState: 0
 --- !u!1 &827616702
 GameObject:
   m_ObjectHideFlags: 0
@@ -3941,7 +3940,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1166042540}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11e4066d02b9d9a45aef904634b32bf9, type: 3}
+  m_Script: {fileID: 11500000, guid: 517d8b24614aa9246b019e90dc3550ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TitleCanvas: {fileID: 599528886}

@@ -2,28 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameSystem;
+
 public class GameTitleUIController : MonoBehaviour
 {
-    private GameUIController UIControll;
+    private GameUIPresenter UIControll;
 
     // Start is called before the first frame update
     private void Awake()
     {
-        UIControll = GameObject.Find("Game UI Canvas").GetComponent<GameUIController>();
+        UIControll = GameObject.Find("Game UI Canvas").GetComponent<GameUIPresenter>();
     }
 
     public void OnClickGameStart()
     {
-        UIControll.StartGame();
+        UIControll.EventTitleUI(UIEvent.Start);
     }
 
     public void OnClickGameQuit()
     {
-        UIControll.QuitGame();
+        UIControll.EventTitleUI(UIEvent.Quit);
     }
 
     public void OnClickGameInfo()
     {
-        UIControll.OpenGameInfo();
+        UIControll.EventTitleUI(UIEvent.Info);
     }
 }

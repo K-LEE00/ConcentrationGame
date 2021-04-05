@@ -11,11 +11,11 @@ public class GamePlayUIController : MonoBehaviour
     private Vector3 destroyCardCountTextScale;
     private int prevDestroyCardCount;
 
-    private GameUIController UIControll;
+    private GameUIPresenter UIControll;
 
     private void Awake()
     {
-        UIControll = GameObject.Find("Game UI Canvas").GetComponent<GameUIController>();
+        UIControll = GameObject.Find("Game UI Canvas").GetComponent<GameUIPresenter>();
         destroyCardCountTextScale = destroyCardCountText.rectTransform.localScale;
     }
 
